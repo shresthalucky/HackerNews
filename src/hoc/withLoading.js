@@ -2,7 +2,15 @@ import React from 'react';
 
 function withLoading(Component) {
 
-  function LoadingComponent({ isLoading, type, ...props }) {
+  function LoadingComponent({ isLoading, type, error, ...props }) {
+
+    if (error) {
+      return (
+        <div className="error-message">
+          <span>Error Occured!</span>
+        </div>
+      );
+    }
 
     if (!isLoading) {
       return (<Component {...props} />)

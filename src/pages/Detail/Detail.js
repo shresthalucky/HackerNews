@@ -5,6 +5,7 @@ import { itemUrl } from '../../api/endpoints';
 import Post from '../../components/Story/Post';
 import Comment from '../../components/Comment';
 import withLoading from '../../hoc/withLoading';
+import { handleError } from '../../api/helpers';
 
 const EnhancedStory = withLoading(Post);
 
@@ -16,7 +17,8 @@ class Detail extends React.Component {
       data: {},
       isLoading: true,
       activeComments: [],
-      allCommentsLoaded: false
+      allCommentsLoaded: false,
+      error: false
     }
   }
 
@@ -26,6 +28,7 @@ class Detail extends React.Component {
 
   getStory = () => {
     fetch(itemUrl(this.props.match.params.storyId))
+      .then(handleError)
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -37,6 +40,11 @@ class Detail extends React.Component {
           } else {
             this.setState({ allCommentsLoaded: true });
           }
+        });
+      })
+      .catch(error => {
+        this.setState({
+          error: true
         });
       });
   }
@@ -61,6 +69,7 @@ class Detail extends React.Component {
     return (
       <div>
         <EnhancedStory
+          error={this.state.error}
           isLoading={this.state.isLoading}
           data={this.state.data}
           type="story"
@@ -68,12 +77,14 @@ class Detail extends React.Component {
 
         {this.state.activeComments.map(id => <Comment id={id} key={id} />)}
 
-        <button
-          className="btn"
-          onClick={this.loadComments}
-          disabled={this.state.allCommentsLoaded}>
-          {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
-        </button>
+        {!this.state.error &&
+          <button
+            className="btn"
+            onClick={this.loadComments}
+            disabled={this.state.allCommentsLoaded}>
+            {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
+          </button>
+        }
       </div>
     )
   }
