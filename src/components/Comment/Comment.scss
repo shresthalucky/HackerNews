@@ -19,6 +19,7 @@
 }
 
 .comment {
+  @extend .wrap-text;
   line-height: 1.5;
 
   @include e(description) {
