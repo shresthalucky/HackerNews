@@ -1,3 +1,25 @@
+//BEM(Block Element Modifier) Naming Convention
+// For Element
+// $element  - Just the element name for the parent block (doesn't require the parent Block name)
+// @usage    - `.Nav {@include e(item){...}}`
+@mixin e($element){
+  &__#{$element}{
+    @content;
+  }
+}
+
+// For Modifier
+// $modifier  - Just the modifier name for the parent block or element
+// @usage     - `.Nav {@include e(item) {@include m(active) {...}}}`
+@mixin m($modifier){
+  &--#{$modifier}{
+    @content;
+  }
+}
+
+// Media Queries
+// $break  - RWD break point values, change them in _config.scss. Default: bootstrap grid
+// @usage  - `.Nav {@include mq(sm) {...}}`
 @mixin mq($break){
   @if $break == "xs" {//lowest breakpoint value
     @content;

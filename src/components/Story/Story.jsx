@@ -40,6 +40,7 @@ class Story extends React.Component {
     return (
       <div className="story">
         <EnhancedPost
+          type="story"
           isLoading={this.state.isLoading}
           data={this.state.data}
         />

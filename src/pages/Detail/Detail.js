@@ -63,12 +63,17 @@ class Detail extends React.Component {
         <EnhancedStory
           isLoading={this.state.isLoading}
           data={this.state.data}
+          type="story"
         />
 
         {this.state.activeComments.map(id => <Comment id={id} key={id} />)}
-        {this.state.data.kids &&
-          <button onClick={this.loadComments} disabled={this.state.allCommentsLoaded}>Load More Comments</button>
-        }
+
+        <button
+          className="btn"
+          onClick={this.loadComments}
+          disabled={this.state.allCommentsLoaded}>
+          {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
+        </button>
       </div>
     )
   }

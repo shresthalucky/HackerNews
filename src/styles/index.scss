@@ -1,27 +1,11 @@
 @import "./partials/config";
 @import "./partials/mixins";
+@import "./partials/reset";
+@import "./partials/helpers";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: $font-family-primary;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.clearfix {
-  &:after {
-    display: table;
-    content: "";
-    clear: both;
-  }
-}
+@import "../components/List/List.scss";
+@import "../components/Story/Story.scss";
+@import "../components/Comment/Comment.scss";
 
 .container {
   padding: 0 15px;
@@ -39,5 +23,72 @@ body {
   @include mq(xl) {
     max-width: $xl-device;
     padding: 0 200px;
+  }
+}
+
+.clearfix {
+  &:after {
+    display: table;
+    content: "";
+    clear: both;
+  }
+}
+
+.btn {
+  background-color: $secondary-dark;
+  border: 1px solid $secondary-dark;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-family: $font-family-primary;
+  font-size: $default-font-size;
+  color: $text-color-dark;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:enabled {
+    &:hover {
+      background-color: $secondary-light;
+      color: $text-color;
+    }
+
+    &:active {
+      background-color: darken($primary-dark, 1%);
+      color: $text-color;
+    }
+  }
+
+  &:disabled {
+    cursor: auto;
+  }
+}
+
+.main-wrapper {
+  padding-bottom: 30px;
+}
+
+.loading-bar {
+  
+  opacity: .1;
+  width: 100%;
+  margin: 50px 0;
+
+  @include e(heading) {
+    height: 30px;
+    width: 100%;
+    margin: 20px 0;
+    background-color: darken($link-color, 40%);
+    @extend .loading-animation;
+    @extend .loading-heading-bg;
+  }
+
+  @include e(description) {
+    height: 20px;
+    width: 100%;
+    background-color: darken($text-color-dark, 40%);
+    @extend .loading-animation;
+    @extend .loading-description-bg;
   }
 }

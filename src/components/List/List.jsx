@@ -5,8 +5,16 @@ import Story from '../Story';
 function List({ list, ...props }) {
   return (
     <div>
-      {list.map(id => <Story id={id} key={id} />)}
-      <button onClick={props.loadStories} disabled={props.allLoaded}>More Stories</button>
+      <div className="stories-list">
+        {list.map(id => <Story id={id} key={id} />)}
+      </div>
+
+      <button className="btn stories-list__btn"
+        onClick={props.loadStories}
+        disabled={props.allLoaded}>
+        {props.allLoaded ? 'No More Stories' : 'More Stories'}
+      </button>
+
     </div>
   )
 }

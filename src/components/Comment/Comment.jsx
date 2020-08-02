@@ -36,6 +36,7 @@ class Comment extends React.Component {
     return (
       <div className="comment">
         <EnhancedPost
+          type="comment"
           isLoading={this.state.isLoading}
           data={this.state.data}
         />
