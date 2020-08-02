@@ -34,7 +34,7 @@ class Comment extends React.Component {
   render() {
 
     return (
-      <div className="comment">
+      <div className="comment-wrapper">
         <EnhancedPost
           type="comment"
           isLoading={this.state.isLoading}
