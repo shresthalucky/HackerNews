@@ -2,6 +2,10 @@ import React from 'react';
 
 import { itemUrl } from '../../api/endpoints';
 import { repliesPerLoad } from '../../constants';
+import withLoading from '../../hoc/withLoading';
+import Post from '../Comment/Post';
+
+const EnhancedPost = withLoading(Post);
 
 class Comment extends React.Component {
   constructor(props) {
@@ -11,7 +15,7 @@ class Comment extends React.Component {
       data: {},
       isLoading: true,
       activeReplies: [],
-      loadReplies: false,
+      initialLoad: false,
       showReplies: false,
       allRepliesLoaded: false,
     }
@@ -34,9 +38,9 @@ class Comment extends React.Component {
 
   toggleReplies = () => {
 
-    if (!this.state.loadReplies) {
+    if (!this.state.initialLoad) {
       this.setState({
-        loadReplies: !this.state.loadReplies,
+        initialLoad: true,
       }, this.loadReplies);
     }
 
@@ -65,20 +69,16 @@ class Comment extends React.Component {
   render() {
 
     return (
-      <div>
-        {this.state.isLoading ? 'loading' :
-          <div>
-            <p>{this.state.data.type}</p>
-            {this.state.data.kids && <button onClick={this.toggleReplies}>Replies</button>}
-
-            <div style={this.state.showReplies ? { 'display': 'block' } : { 'display': 'none' }}>
-              {this.state.loadReplies && this.state.activeReplies.map(id => <Comment id={id} key={id} />)}
-              <button onClick={this.loadReplies} disabled={this.state.allRepliesLoaded}>More Replies</button>
-            </div>
-
-          </div>
-        }
-      </div>
+      <EnhancedPost
+        isLoading={this.state.isLoading}
+        data={this.state.data}
+        toggleReplies={this.toggleReplies}
+        activeReplies={this.state.activeReplies}
+        showReplies={this.state.showReplies}
+        initialLoad={this.state.initialLoad}
+        loadReplies={this.loadReplies}
+        allRepliesLoaded={this.state.allRepliesLoaded}
+      />
     )
   }
 }

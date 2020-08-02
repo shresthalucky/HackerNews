@@ -1,8 +1,11 @@
 import React from 'react';
 
 import { itemUrl } from '../../api/endpoints';
-import Comment from '../Comment/Comment';
+import withLoading from '../../hoc/withLoading';
+import Post from './Post';
 import { commentsPerLoad } from '../../constants';
+
+const EnhancedPost = withLoading(Post);
 
 class Story extends React.Component {
 
@@ -13,7 +16,7 @@ class Story extends React.Component {
       data: {},
       isLoading: true,
       activeComments: [],
-      loadComments: false,
+      initialLoad: false,
       showComments: false,
       allCommentsLoaded: false
     }
@@ -36,9 +39,9 @@ class Story extends React.Component {
 
   toggleComments = () => {
 
-    if (!this.state.loadComments) {
+    if (!this.state.initialLoad) {
       this.setState({
-        loadComments: !this.state.loadComments,
+        initialLoad: true,
       }, this.loadComments);
     }
 
@@ -66,22 +69,17 @@ class Story extends React.Component {
   }
 
   render() {
-
     return (
-      <div>
-        {this.state.isLoading ? 'loading' :
-          <div>
-            <p>{this.state.data.title}</p>
-
-            <button onClick={this.toggleComments}>Comment</button>
-
-            <div style={this.state.showComments ? { 'display': 'block' } : { 'display': 'none' }}>
-              {this.state.loadComments && this.state.activeComments.map(id => <Comment id={id} key={id} />)}
-              <button onClick={this.loadComments} disabled={this.state.allCommentsLoaded}>More Comments</button>
-            </div>
-          </div>
-        }
-      </div>
+      <EnhancedPost
+        isLoading={this.state.isLoading}
+        data={this.state.data}
+        toggleComments={this.toggleComments}
+        activeComments={this.state.activeComments}
+        showComments={this.state.showComments}
+        initialLoad={this.state.initialLoad}
+        loadComments={this.loadComments}
+        allCommentsLoaded={this.state.allCommentsLoaded}
+      />
     )
   }
 }
