@@ -65,13 +65,8 @@
   }
 }
 
-.main-wrapper {
-  padding-bottom: 30px;
-}
-
 .loading-bar {
-  
-  opacity: .1;
+  opacity: 0.1;
   width: 100%;
   margin: 50px 0;
 
@@ -90,5 +85,28 @@
     background-color: darken($text-color-dark, 40%);
     @extend .loading-animation;
     @extend .loading-description-bg;
+  }
+}
+
+main {
+  padding-bottom: 40px;
+}
+
+.header {
+  padding: 30px 0;
+
+  h1 {
+    a {
+      color: $title-color;
+      text-decoration: none;
+    }
+  }
+}
+
+.footer {
+  padding: 60px 0;
+
+  @include e(text) {
+    color: $text-color-dark;
   }
 }

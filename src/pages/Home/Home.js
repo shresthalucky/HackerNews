@@ -53,6 +53,7 @@ class Home extends React.Component {
   render() {
     return (
       <EnchancedList
+        type="story"
         isLoading={this.state.isLoading}
         list={this.state.activeStories}
         loadStories={this.loadStories}

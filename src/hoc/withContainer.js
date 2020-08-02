@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function withContainer(Component) {
 
@@ -6,17 +7,23 @@ function withContainer(Component) {
 
     return (
       <div className="main-wrapper">
-        <header>
+        <header className="header">
           <div className="container">
-            HackerNews
+            <h1>
+              <Link to="/">HackerNews</Link>
+            </h1>
           </div>
         </header>
-        <div className="container">
-          <Component {...props} />
-        </div>
-        <footer>
+        <main>
           <div className="container">
-            HackerNews
+            <Component {...props} />
+          </div>
+        </main>
+        <footer className="footer">
+          <div className="container">
+            <span className="footer__text">
+              Built using <a href="https://github.com/HackerNews/API" target="_new" title="HackerNews API">HackerNews API</a>
+            </span>
           </div>
         </footer>
       </div>

@@ -8,7 +8,7 @@ function Post({ data, ...props }) {
       <div className="description comment__description">
         <span className="description__by"><FiUser /> <strong>{data.by}</strong></span>
         <span className="description__comments"><FiMessageSquare /> {data.kids ? data.kids.length : '0'}</span>
-        <span className="description__time"><FiClock /> {new Date(data.time).toLocaleString()}</span>
+        <span className="description__time"><FiClock /> {new Date(data.time * 1000).toLocaleString()}</span>
       </div>
       {ReactHtmlParser(data.text)}
     </div>
