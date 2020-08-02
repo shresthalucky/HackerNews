@@ -1,0 +1,43 @@
+@import "./partials/config";
+@import "./partials/mixins";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.clearfix {
+  &:after {
+    display: table;
+    content: "";
+    clear: both;
+  }
+}
+
+.container {
+  padding: 0 15px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  @include mq(md) {
+    max-width: $md-device;
+  }
+
+  @include mq(lg) {
+    max-width: $lg-device;
+  }
+
+  @include mq(xl) {
+    max-width: $xl-device;
+    padding: 0 200px;
+  }
+}

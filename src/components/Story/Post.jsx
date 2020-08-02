@@ -1,22 +1,14 @@
 import React from 'react';
-
-import Comment from '../Comment/Comment';
+import { Link } from 'react-router-dom';
 
 function Post({ data, ...props }) {
   return (
     <div>
-      {data.title}
-      
-      {data.kids &&
-        <div>
-          <button onClick={props.toggleComments}>Comment</button>
-
-          <div style={props.showComments ? { 'display': 'block' } : { 'display': 'none' }}>
-            {props.initialLoad && props.activeComments.map(id => <Comment id={id} key={id} />)}
-            <button onClick={props.loadComments} disabled={props.allCommentsLoaded}>More Comments</button>
-          </div>
-        </div>
-      }
+      <Link to={`/${data.id}`}>{data.title}</Link>
+      <div>
+        <span>By {data.by}</span>
+        <span>{data.kids ? data.kids.length : '0'} comments</span>
+      </div>
     </div>
   )
 }

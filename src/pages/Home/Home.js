@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { topStoriesUrl } from '../../api/endpoints';
-import Story from '../../components/Story/Story';
 import { storiesPerLoad } from '../../constants';
+import withLoading from '../../hoc/withLoading';
+import List from '../../components/List';
 
+const EnchancedList = withLoading(List);
 class Home extends React.Component {
 
   constructor() {
@@ -11,7 +13,8 @@ class Home extends React.Component {
 
     this.state = {
       activeStories: [],
-      allLoaded: false
+      allLoaded: false,
+      isLoading: true
     }
 
     this.storiesList = [];
@@ -27,6 +30,9 @@ class Home extends React.Component {
       .then(data => {
         this.storiesList = [...data];
         this.loadStories();
+        this.setState({
+          isLoading: false
+        })
       });
   }
 
@@ -46,11 +52,12 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div>
-        {this.state.activeStories.map(id => <Story id={id} key={id} />)}
-
-        <button onClick={this.loadStories} disabled={this.state.allLoaded}>More Stories</button>
-      </div>
+      <EnchancedList
+        isLoading={this.state.isLoading}
+        list={this.state.activeStories}
+        loadStories={this.loadStories}
+        allLoaded={this.state.allLoaded}
+      />
     )
   }
 }

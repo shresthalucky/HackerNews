@@ -1,0 +1,31 @@
+// fonts
+$font-family-fallback: 'Arial', sans-serif;
+$font-family-primary: 'Source Sans Pro', $font-family-fallback;
+$default-font-size: 16px;
+
+$heading-1: $default-font-size + 10px;
+$heading-2: $default-font-size + 6px;
+$heading-3: $default-font-size + 2px;
+$heading-4: $default-font-size;
+
+// colors
+$white: #FFFFFF;
+$light-white: #efefef;
+$dodger-blue: #2979FF;
+$mine-shaft: #212121;
+$apple: #43A047;
+$cinnabar: #E53935;
+
+$primary-color: $dodger-blue;
+$primary-color-light: lighten($primary-color, 10%);
+$text-color: $mine-shaft;
+$text-color-light: lighten($text-color, 50%);
+$text-color-extra-light: lighten($text-color, 70%);
+$color-done: $apple;
+$color-delete: $cinnabar;
+
+//Breakpoints
+$sm-device: 540px;
+$md-device: 720px;
+$lg-device: 960px;
+$xl-device: 1400px;
