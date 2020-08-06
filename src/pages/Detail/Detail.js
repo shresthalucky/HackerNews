@@ -78,12 +78,14 @@ class Detail extends React.Component {
         {this.state.activeComments.map(id => <Comment id={id} key={id} />)}
 
         {!this.state.error &&
-          <button
-            className="btn"
-            onClick={this.loadComments}
-            disabled={this.state.allCommentsLoaded}>
-            {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
-          </button>
+          <div className="detail-actions">
+            <button
+              className="btn"
+              onClick={this.loadComments}
+              disabled={this.state.allCommentsLoaded}>
+              {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
+            </button>
+          </div>
         }
       </div>
     )
