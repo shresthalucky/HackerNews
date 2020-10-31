@@ -14,10 +14,20 @@ function Post({ data, ...props }) {
     <div>
       {headingElement}
       <div className="description story__description">
-        <span className="description__by"><FiUser /> <strong>{data.by}</strong></span>
-        <span className="description__comments"><FiMessageSquare /> {data.kids ? data.kids.length : '0'}</span>
-        <span className="description__time"><FiClock /> {new Date(data.time * 1000).toLocaleString()}</span>
-        <span className="description__permalink"><a href={data.url} target="_new" title={data.title}><FiLink /></a></span>
+        <span className="description__by">
+          <FiUser /> <strong>{data.by}</strong>
+        </span>
+        <span className="description__comments">
+          <FiMessageSquare /> {data.kids ? data.kids.length : '0'}
+        </span>
+        <span className="description__time">
+          <FiClock /> {new Date(data.time * 1000).toLocaleString()}
+        </span>
+        <span className="description__permalink">
+          <a href={data.url} target="_new" title={data.title}>
+            <FiLink />
+          </a>
+        </span>
       </div>
     </div>
   )

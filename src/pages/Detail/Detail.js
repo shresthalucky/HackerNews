@@ -1,95 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 
 import { commentsPerLoad } from '../../constants';
-import { itemUrl } from '../../api/endpoints';
-import Post from '../../components/Story/Post';
 import Comment from '../../components/Comment';
-import withLoading from '../../hoc/withLoading';
-import { handleError } from '../../api/helpers';
 
-const EnhancedStory = withLoading(Post);
+import Story from '../../components/Story/Story';
 
-class Detail extends React.Component {
-  constructor(props) {
-    super(props);
+function Detail({ storiesDetail, ...props }) {
+  const [comments, setComments] = useState([]);
+  const [activeComments, setActiveComments] = useState([]);
+  const [allCommentsLoaded, setAllCommentsLoaded] = useState(true);
 
-    this.state = {
-      data: {},
-      isLoading: true,
-      activeComments: [],
-      allCommentsLoaded: false,
-      error: false
+  const { storyId } = props.match.params;
+
+  useEffect(() => {
+    const story = storiesDetail[storyId];
+    if (story) {
+      setComments(story.kids);
     }
-  }
+  }, [storiesDetail, storyId]);
 
-  componentDidMount() {
-    this.getStory();
-  }
+  useEffect(() => {
+    setActiveComments([...comments.slice(0, commentsPerLoad)]);
+  }, [comments]);
 
-  getStory = () => {
-    fetch(itemUrl(this.props.match.params.storyId))
-      .then(handleError)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          data: { ...data },
-          isLoading: false,
-        }, () => {
-          if (this.state.data.kids) {
-            this.loadComments()
-          } else {
-            this.setState({ allCommentsLoaded: true });
-          }
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: true
-        });
-      });
-  }
+  useEffect(() => {
+    if (comments.length === activeComments.length) {
+      setAllCommentsLoaded(true);
+    } else {
+      setAllCommentsLoaded(false);
+    }
+  }, [comments, activeComments]);
 
-  loadComments = () => {
-    const endIndex = this.state.activeComments.length + commentsPerLoad;
+  const handleLoadMoreComments = useCallback(() => {
+    const endIndex = activeComments.length + commentsPerLoad;
 
-    this.setState({
-      activeComments: [...this.state.data.kids.slice(0, endIndex)]
-    }, () => {
+    setActiveComments([...comments.slice(0, endIndex)]);
+  }, [activeComments, comments]);
 
-      if (this.state.data.kids.length === this.state.activeComments.length) {
-        this.setState({
-          allCommentsLoaded: true
-        });
+  return (
+    <div>
+      <Story id={storyId} />
 
-      }
-    });
-  }
+      {activeComments.map((id) => (
+        <Comment id={id} key={id} />
+      ))}
 
-  render() {
-    return (
-      <div>
-        <EnhancedStory
-          error={this.state.error}
-          isLoading={this.state.isLoading}
-          data={this.state.data}
-          type="story"
-        />
-
-        {this.state.activeComments.map(id => <Comment id={id} key={id} />)}
-
-        {!this.state.error &&
-          <div className="detail-actions">
-            <button
-              className="btn"
-              onClick={this.loadComments}
-              disabled={this.state.allCommentsLoaded}>
-              {this.state.allCommentsLoaded ? 'No More Comments' : 'More Comments'}
-            </button>
-          </div>
-        }
+      <div className="detail-actions">
+        <button
+          className="btn"
+          onClick={handleLoadMoreComments}
+          disabled={allCommentsLoaded}
+        >
+          {allCommentsLoaded ? 'No More Comments' : 'More Comments'}
+        </button>
       </div>
-    )
-  }
+    </div>
+  );
 }
 
-export default Detail;
+const mapStateToProps = ({ story }) => ({
+  storiesDetail: story.storiesDetail,
+});
+
+export default connect(mapStateToProps)(Detail);

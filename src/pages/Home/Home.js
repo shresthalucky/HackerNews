@@ -1,75 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 
-import { topStoriesUrl } from '../../api/endpoints';
-import { storiesPerLoad } from '../../constants';
 import withLoading from '../../hoc/withLoading';
-import { handleError } from '../../api/helpers';
+import { storiesPerLoad } from '../../constants';
+import { fetchStories, fetchStory } from '../../actions/storyActions';
+
 import List from '../../components/List';
 
 const EnchancedList = withLoading(List);
-class Home extends React.Component {
 
-  constructor() {
-    super();
+function Home({ stories, storiesDetail, fetchStories, fetchStory, ...props }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeStories, setActiveStories] = useState([]);
+  const [allStoriesLoaded, setAllStoriesLoaded] = useState(true);
+  const [isError, setIsError] = useState(false);
 
-    this.state = {
-      activeStories: [],
-      allLoaded: false,
-      isLoading: true,
-      error: false
+  useEffect(() => {
+    fetchStories().catch(() => setIsError(true));
+  }, [fetchStories]);
+
+  useEffect(() => {
+    if (stories.length) {
+      setIsLoading(false);
     }
 
-    this.storiesList = [];
-  }
+    setActiveStories([...stories.slice(0, storiesPerLoad)]);
+  }, [stories]);
 
-  componentDidMount() {
-    this.getTopStories();
-  }
-
-  getTopStories = () => {
-    fetch(topStoriesUrl)
-      .then(handleError)
-      .then(response => response.json())
-      .then(data => {
-        this.storiesList = [...data];
-        this.loadStories();
-        this.setState({
-          isLoading: false
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: true
-        });
-      });
-  }
-
-  loadStories = () => {
-    const endIndex = this.state.activeStories.length + storiesPerLoad;
-
-    this.setState({
-      activeStories: [...this.storiesList.slice(0, endIndex)]
-    });
-
-    if (this.storiesList.length === this.state.activeStories.length) {
-      this.setState({
-        allLoaded: true
-      })
+  useEffect(() => {
+    if (stories.length === activeStories.length) {
+      setAllStoriesLoaded(true);
+    } else {
+      setAllStoriesLoaded(false);
     }
-  }
+  }, [stories, activeStories]);
 
-  render() {
-    return (
-      <EnchancedList
-        type="story"
-        isLoading={this.state.isLoading}
-        error={this.state.error}
-        list={this.state.activeStories}
-        loadStories={this.loadStories}
-        allLoaded={this.state.allLoaded}
-      />
-    )
-  }
+  const handleLoadMoreStories = useCallback(() => {
+    const endIndex = activeStories.length + storiesPerLoad;
+
+    setActiveStories([...stories.slice(0, endIndex)]);
+  }, [activeStories, stories]);
+
+  return (
+    <EnchancedList
+      type="story"
+      isLoading={isLoading}
+      error={isError}
+      stories={activeStories}
+      handleLoadMoreStories={handleLoadMoreStories}
+      allStoriesLoaded={allStoriesLoaded}
+    />
+  );
 }
 
-export default Home;
+const mapStateToProps = ({ story }) => ({
+  stories: story.stories,
+  storiesDetail: story.storiesDetail,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchStories: () => dispatch(fetchStories()),
+  fetchStory: (id) => dispatch(fetchStory(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

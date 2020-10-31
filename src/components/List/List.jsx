@@ -2,17 +2,17 @@ import React from 'react';
 
 import Story from '../Story';
 
-function List({ list, ...props }) {
+function List({ stories, ...props }) {
   return (
     <div>
       <div className="stories-list">
-        {list.map(id => <Story id={id} key={id} />)}
+        {stories.map(id => <Story id={id} key={id} />)}
       </div>
 
       <button className="btn stories-list__btn"
-        onClick={props.loadStories}
-        disabled={props.allLoaded}>
-        {props.allLoaded ? 'No More Stories' : 'More Stories'}
+        onClick={props.handleLoadMoreStories}
+        disabled={props.allStoriesLoaded}>
+        {props.allStoriesLoaded ? 'No More Stories' : 'More Stories'}
       </button>
 
     </div>

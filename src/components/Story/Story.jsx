@@ -1,61 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
-import { itemUrl } from '../../api/endpoints';
-import withLoading from '../../hoc/withLoading';
+import { fetchStory } from '../../actions/storyActions';
+
 import Post from './Post';
-import { handleError } from '../../api/helpers';
+import withLoading from '../../hoc/withLoading';
 
 const EnhancedPost = withLoading(Post);
 
-class Story extends React.Component {
+function Story({ fetchStory, id, storyDetail }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [story, setStory] = useState({});
+  const [isError, setIsError] = useState(false);
 
-  constructor(props) {
-    super(props);
+  useEffect(() => {
+    fetchStory(id).catch(() => setIsError(true));
+  }, [id, fetchStory]);
 
-    this.state = {
-      data: {},
-      isLoading: true,
-      activeComments: [],
-      initialLoad: false,
-      showComments: false,
-      allCommentsLoaded: false,
-      error: false
+  useEffect(() => {
+    if (storyDetail) {
+      setStory({ ...storyDetail });
+      setIsLoading(false);
     }
-  }
+  }, [storyDetail]);
 
-  componentDidMount() {
-    this.getStory();
-  }
-
-  getStory = () => {
-    fetch(itemUrl(this.props.id))
-      .then(handleError)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          data: { ...data },
-          isLoading: false,
-        })
-      })
-      .catch(error => {
-        this.setState({
-          error: true
-        });
-      });
-  }
-
-  render() {
-    return (
-      <div className="story">
-        <EnhancedPost
-          type="story"
-          error={this.state.error}
-          isLoading={this.state.isLoading}
-          data={this.state.data}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className="story">
+      <EnhancedPost
+        type="story"
+        error={isError}
+        isLoading={isLoading}
+        data={story}
+      />
+    </div>
+  );
 }
 
-export default Story;
+const mapStateToProps = ({ story }, { id }) => ({
+  storyDetail: story.storiesDetail[id],
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchStory: (id) => dispatch(fetchStory(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Story);
