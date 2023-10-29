@@ -1,6 +1,5 @@
 .comment-wrapper {
   background-color: $secondary-dark;
-  color: $text-color;
   padding: 30px;
   border-radius: 6px;
   margin: 30px 0;
@@ -21,6 +20,8 @@
 .comment {
   @extend .wrap-text;
   line-height: 1.5;
+  font-size: 16px;
+  color: $text-color;
 
   @include e(description) {
     margin-bottom: 15px;
