@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { formatDistanceToNowStrict } from 'date-fns';
 import { FiUser, FiMessageSquare, FiLink, FiClock } from 'react-icons/fi';
 
 
@@ -9,6 +10,7 @@ function Post({ data, ...props }) {
   const headingElement = storyId ?
     <h1 className="story__title"><Link to={`/${data.id}`}>{data.title}</Link></h1> :
     <h2 className="story__title"><Link to={`/${data.id}`}>{data.title}</Link></h2>
+  const postDate = new Date(data.time * 1000);
 
   return (
     <div>
@@ -20,8 +22,8 @@ function Post({ data, ...props }) {
         <span className="description__comments">
           <FiMessageSquare /> {data.kids ? data.kids.length : '0'}
         </span>
-        <span className="description__time">
-          <FiClock /> {new Date(data.time * 1000).toLocaleString()}
+        <span className="description__time" title={postDate.toLocaleString()}>
+          <FiClock /> {formatDistanceToNowStrict(postDate)} ago
         </span>
         <span className="description__permalink">
           <a href={data.url} target="_new" title={data.title}>
